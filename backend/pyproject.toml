@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "fintech-api"
+version = "0.1.0"
+description = ""
+authors = ["Pablo Pin <px1@devidence.dev>"]
+readme = "README.md"
+packages = [{ include = "main" }]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+fastapi = "^0.115.12"
+uvicorn = {extras = ["standard"], version = "^0.34.1"}
+sqlalchemy = "^2.0.29"
+pymysql = "^1.1.0"
+cryptography = "^42.0.5"
+gunicorn = "^21.2.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

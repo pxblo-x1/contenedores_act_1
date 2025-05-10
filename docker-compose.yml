@@ -1,6 +1,9 @@
 services:
   mysql:
-    image: pablopin92/fintech-mysql:1.0.0
+    build:
+      context: ./database
+      dockerfile: ./Dockerfile
+    image: pablopin92/fintech-mysql:latest
     container_name: fintech-mysql
     environment:
       MYSQL_ROOT_PASSWORD: secret
@@ -14,23 +17,39 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    networks:
+      - fintech-net
 
   backend:
-    image: pablopin92/fintech-backend:1.0.0
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    image: pablopin92/fintech-backend:latest
     container_name: fintech-backend
     ports:
       - "8000:8000"
     depends_on:
       mysql:
-        condition: service_healthy
+        condition: service_healthy 
+    networks:
+      - fintech-net
 
   frontend:
-    image: pablopin92/fintech-frontend:1.0.0
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    image: pablopin92/fintech-frontend:latest
     container_name: fintech-frontend
     ports:
       - "80:80"
     depends_on:
       - backend
+    networks:
+      - fintech-net
 
 volumes:
   mysql_data:
+
+networks:
+  fintech-net:
+    driver: bridge

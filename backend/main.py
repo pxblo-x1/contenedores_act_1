@@ -5,9 +5,17 @@ from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 
-DATABASE_URL = "mysql+pymysql://root:secret@mysql:3306/fintech"
+# Usar variables de entorno para la configuración de la base de datos
+MYSQL_HOST = os.getenv("MYSQL_HOST", "mysql-service")
+MYSQL_PORT = os.getenv("MYSQL_PORT", "3306")
+MYSQL_USER = os.getenv("MYSQL_USER", "root")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "secret")
+MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "fintech")
+
+DATABASE_URL = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -60,6 +68,10 @@ def get_db():
 @app.get("/")
 def root():
     return {"message": "API FastAPI con SQLAlchemy"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
 
 @app.get("/transactions", response_model=List[TransactionRead])
 def get_transactions(db: Session = Depends(get_db)):

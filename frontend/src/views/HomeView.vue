@@ -45,8 +45,8 @@
   import { ref, onMounted } from 'vue'
   import axios from 'axios'
   
-  // Leer la variable de entorno
-  const API_HOST = import.meta.env.VITE_API_HOST
+  // Leer la variable de entorno, usar rutas relativas si no está definida
+  const API_HOST = import.meta.env.VITE_API_HOST || '/api'
   
   const form = ref({ description: '', amount: null })
   const transactions = ref([])
